@@ -8,5 +8,5 @@ You can also swipe left or right on touchscreen devices to control the slide.
 
 You can view the pen for Cocoslide <a href="https://codepen.io/Cocomik/pen/MNoEOr">by clicking here</a>
 
-Contact: cocomikweb@gmail.com
+Contact: cocomikweb@gmail.com <br>
 Website: https://cocomik.com
