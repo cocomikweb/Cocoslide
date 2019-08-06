@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="https://cocomik.com/hammer.js"></script>
+
+		<style>
+			*{
+				box-sizing: border-box;
+				position: relative;
+				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				background-color: black;
+				color: white;
+			}
+
+			img {
+				width: 20%;
+				height: 100%;
+				object-fit: contain;
+			}
+
+			main {
+				display: flex;
+				height: 100vh;
+			}
+
+			.container {
+				margin: auto;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			.slide_div {
+				display: flex;
+				flex-flow: row wrap;
+				width: 500%;
+				height: 100%;
+			}
+
+			.commands {
+				display: flex;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+			.next,.back {
+				width:15%;
+			}
+			.play {
+				width:70%;
+			}
+
+		</style>
+	</head>
+
+	<body>
+		<main>
+			<div class="container">
+
+				<!-- SLIDER -->
+				<div class="slide_div">
+					<img class="slide" src="https://cocomik.com/img/b1.jpg">
+					<img class="slide" src="https://cocomik.com/img/b2.jpg">
+					<img class="slide" src="https://cocomik.com/img/b3.jpg">
+					<img class="slide" src="https://cocomik.com/img/b4.jpg">
+					<img class="slide" src="https://cocomik.com/img/b1.jpg">
+				</div>
+
+				<!-- COMMANDS -->
+				<div class="commands">
+					<div class="back"></div>
+					<div class="play"></div>
+					<div class="next"></div>
+				</div>
+			</div>
+		</main>
+	</body>
+
+	<script>
+
+		var i = 1;
+		var x = $(".slide");
+		var wait;
+		var timer;
+
+		cocoslide();
+
+		function cocoslide(){
+
+			i += 1;
+
+			if(i > x.length){
+				i = 1;
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				wait = 0;
+			}
+
+			else{
+				$(".slide_div").stop(true,true).animate({left:"-=100%"},4000,'linear');
+				wait = 4000;
+			}
+
+			timer = setTimeout(cocoslide, wait);
+		}
+
+
+		//NEXT
+		$(".next").click(function(){
+			clearTimeout(timer);
+
+			i += 1;
+
+			if( i > x.length){
+				i = 2;
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+		});
+
+
+		//BACK
+		$(".back").click(function(){
+			clearTimeout(timer);
+			i -= 1;
+
+			if(i < 1){
+				i = x.length - 1;
+				$(".slide_div").stop(true,true).animate({left:"-=400%"});
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+		});
+
+		//PLAY
+		$(".play").click(function(){
+			clearTimeout(timer);
+			cocoslide();
+		});
+
+
+
+		//NEXT SWIPE
+		$(".play").hammer().on("swipeleft",function(){
+			clearTimeout(timer);
+
+			i += 1;
+
+			if( i > x.length){
+				i = 2;
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+		});
+
+
+		//BACK SWIPE
+		$(".play").hammer().on("swiperight",function(){
+			clearTimeout(timer);
+			i -= 1;
+
+			if(i < 1){
+				i = x.length - 1;
+				$(".slide_div").stop(true,true).animate({left:"-=400%"});
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+		});
+
+	</script>
+
+</html>
