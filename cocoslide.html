@@ -4,7 +4,8 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="https://cocomik.com/ht.js"></script>
+		<script src="https://cocomik.com/hammer.js"></script>
+
 		<style>
 			*{
 				box-sizing: border-box;
@@ -12,59 +13,49 @@
 				margin: 0;
 				padding: 0;
 			}
+
 			body {
-				background-color: #232323;
-				color: grey;
+				background-color: black;
+				color: white;
 			}
-			main {
-				min-height: 100vh;
-				display: flex;
-				flex-flow:column wrap;
-			}
+
 			img {
-				width:25%;
+				width: 20%;
 				height: 100%;
 				object-fit: contain;
 			}
-			.centered {
+
+			main {
 				display: flex;
-				flex-flow: row wrap;
-				justify-content: center;
-				align-items: center;
+				height: 100vh;
 			}
+
 			.container {
 				margin: auto;
-				width:80%;
+				width: 100%;
 				overflow: hidden;
-				border-radius: 4px;
-			}
-			#slides {
-				width:400%;
-				display: flex;
-				flex-flow: row wrap;
-				justify-content: space-around;
 			}
 
-			.slide_commands {
+			.slide_div {
+				display: flex;
+				flex-flow: row wrap;
+				width: 500%;
+				height: 100%;
+			}
+
+			.commands {
+				display: flex;
 				position: absolute;
+				top: 0;
+				left: 0;
 				width: 100%;
 				height: 100%;
-				z-index: 1;
-				display: flex;
-				flex-flow: row wrap;
 			}
-
-			.previous, .next {
-				width: 15%;
+			.next,.back {
+				width:15%;
 			}
 			.play {
-				width: 70%;
-			}
-			.slide_commands h1 {
-				display: none;
-			}
-			.slide_commands:hover h1{
-				display: flex;
+				width:70%;
 			}
 
 		</style>
@@ -74,111 +65,125 @@
 		<main>
 			<div class="container">
 
-				<div class="slide_commands">
-					<div class="slide_command centered previous">
-						<h1>&lsaquo;</h1>
-					</div>
-
-					<div class="slide_command centered play">
-					</div>
-
-					<div class="slide_command centered next">
-						<h1>&rsaquo;</h1>
-					</div>
+				<!-- SLIDER -->
+				<div class="slide_div">
+					<img class="slide" src="https://cocomik.com/img/a1.jpg">
+					<img class="slide" src="https://cocomik.com/img/a2.jpg">
+					<img class="slide" src="https://cocomik.com/img/a3.jpg">
+					<img class="slide" src="https://cocomik.com/img/a4.jpg">
+					<img class="slide" src="https://cocomik.com/img/a1.jpg">
 				</div>
 
-				<div id="slides">
-					<img class="slide" src="https://cocomik.com/pics/a.jpg">
-					<img class="slide" src="https://cocomik.com/pics/b.jpg">
-					<img class="slide" src="https://cocomik.com/pics/c.jpg">
-					<img class="slide" src="https://cocomik.com/pics/a.jpg">
+				<!-- COMMANDS -->
+				<div class="commands">
+					<div class="back"></div>
+					<div class="play"></div>
+					<div class="next"></div>
 				</div>
-				
 			</div>
 		</main>
 	</body>
 
-	<script type="text/javascript">
+	<script>
+
 		var i = 1;
-		var x = $('.slide');
+		var x = $(".slide");
+		var wait;
 		var timer;
-		slider();
-		function slider(){
+
+		cocoslide();
+
+		function cocoslide(){
+
 			i += 1;
 
 			if(i > x.length){
 				i = 1;
-				$("#slides").stop(true,true).animate({left:'+=300%'},0);
-				wait_time = 0;
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				wait = 0;
 			}
-			else {
-				$("#slides").stop(true,true).animate({left:'-=100%'},2000);
-				wait_time = 3000;
+
+			else{
+				$(".slide_div").stop(true,true).animate({left:"-=100%"},500);
+				wait = 3000;
 			}
-			timer = setTimeout(slider,wait_time);
+
+			timer = setTimeout(cocoslide, wait);
 		}
 
-		// PLAY
-		$(".play").click(function(){
-			clearTimeout(timer);
-			slider();
-		});
-
-		// PREVIOUS
-		$(".previous").click(function(){
-			clearTimeout(timer);
-			i -= 1;
-			if (i < 1){
-				i = x.length-1;
-				$("#slides").animate({left:"-=300%"},0);
-				$("#slides").animate({left:'+=100%'},"medium");
-			}
-			else{
-				$("#slides").animate({left:'+=100%'},"medium");
-			}
-		});
 
 		//NEXT
 		$(".next").click(function(){
 			clearTimeout(timer);
+
 			i += 1;
-			if (i > x.length){
+
+			if( i > x.length){
 				i = 2;
-				$("#slides").animate({left:"+=300%"},0);
-				$("#slides").animate({left:'-=100%'},"medium");
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
 			}
 			else{
-				$("#slides").animate({left:'-=100%'},"medium");
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
 			}
 		});
 
-		//SWIPE PREVIOUS
+
+		//BACK
+		$(".back").click(function(){
+			clearTimeout(timer);
+			i -= 1;
+
+			if(i < 1){
+				i = x.length - 1;
+				$(".slide_div").stop(true,true).animate({left:"-=400%"});
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
+			}
+		});
+
+		//PLAY
+		$(".play").click(function(){
+			clearTimeout(timer);
+			cocoslide();
+		});
+
+
+
+		//NEXT SWIPE
+		$(".play").hammer().on("swipeleft",function(){
+			clearTimeout(timer);
+
+			i += 1;
+
+			if( i > x.length){
+				i = 2;
+				$(".slide_div").stop(true,true).animate({left:"+=400%"});
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+			else{
+				$(".slide_div").stop(true,true).animate({left:"-=100%"});
+			}
+		});
+
+
+		//BACK SWIPE
 		$(".play").hammer().on("swiperight",function(){
 			clearTimeout(timer);
 			i -= 1;
-			if (i < 1){
-				i = x.length-1;
-				$("#slides").animate({left:"-=300%"},0);
-				$("#slides").animate({left:'+=100%'},"medium");
-			}
-			else{
-				$("#slides").animate({left:'+=100%'},"medium");
-			}
-		});
 
-		//SWIPE NEXT
-		$(".play").hammer().on("swipeleft",function(){
-			clearTimeout(timer);
-			i += 1;
-			if (i > x.length){
-				i = 2;
-				$("#slides").animate({left:"+=300%"},0);
-				$("#slides").animate({left:'-=100%'},"medium");
+			if(i < 1){
+				i = x.length - 1;
+				$(".slide_div").stop(true,true).animate({left:"-=400%"});
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
 			}
 			else{
-				$("#slides").animate({left:'-=100%'},"medium");
+				$(".slide_div").stop(true,true).animate({left:"+=100%"});
 			}
 		});
 
 	</script>
+
 </html>
